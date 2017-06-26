@@ -30,7 +30,10 @@ of course, the license;
 * rename the file according to Java camel case conventions without spaces etc. and remove cryptic numbers so we have
 a nice name ending in lower case '.ogg' (again, try to use existing stuff as a reference to avoid chaos).
 
-## TODO
+## ResourceBundle
 
-* generate resource bundle class(es) for type safety/spelling error prevention/easy lookup via IDE code completion/
-maybe categorization.
+We automatically create a resource bundle for all .ogg files in order to provide code lookup in IDEs to avoid users
+having to manually determine the asset paths.
+
+The compilation and running of the resource bundle generator within the same maven module is a bit messy and should
+be avoided, ie. it should be moved to its own module at some point.
