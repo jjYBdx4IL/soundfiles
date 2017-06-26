@@ -17,4 +17,13 @@ every build.
 
 If you want to contribute files, please respect the license demands of the sound file's author(s). This project's aim
 is to include only files that do not require changes to dependent programs or restrict them or their licensing in any
-way. However, we cannot give any guarantees of course. 
+way. However, we cannot give any guarantees of course.
+
+If you want to make contributions, please follow the conventions as demonstrated in the current git log, ie.
+
+* one sound file per commit;
+* if possible, include information about the original author, the web page's url and the downloaded file's name, and,
+of course, the license;
+* re-encode the file to ogg vorbis using a reasonable bit rate (not larger than 128 kbits/s);
+* rename the file according to Java camel case conventions without spaces etc. and remove cryptic number so we have
+a nice name ending in lower case '.ogg' (again, try to use existing stuff as a reference to avoid chaos).
