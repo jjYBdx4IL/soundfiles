@@ -15,7 +15,6 @@
  */
 package com.github.jjYBdx4IL.audio.soundfiles.generator;
 
-import com.helger.jcodemodel.AbstractJClass;
 import com.helger.jcodemodel.EClassType;
 import com.helger.jcodemodel.JBlock;
 import com.helger.jcodemodel.JClassAlreadyExistsException;
@@ -24,7 +23,6 @@ import com.helger.jcodemodel.JDefinedClass;
 import com.helger.jcodemodel.JEnumConstant;
 import com.helger.jcodemodel.JExpr;
 import com.helger.jcodemodel.JFieldVar;
-import com.helger.jcodemodel.JInvocation;
 import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JMod;
 import com.helger.jcodemodel.JVar;
@@ -58,14 +56,14 @@ public class ResourceBundleGenerator {
             }
         }
         try {
-            new ResourceBundleGenerator().generate(args[0], args[1], scanRootDir, outputRootDir, true);
+            new ResourceBundleGenerator().generate(args[0], args[1], scanRootDir, outputRootDir);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    public void generate(String packageName, String interfaceSimpleName, File scanDirectory, File outputRootDir,
-            boolean assumeEotExistence) throws JClassAlreadyExistsException, IOException {
+    public void generate(String packageName, String typeSimpleName, File scanDirectory, File outputRootDir)
+            throws JClassAlreadyExistsException, IOException {
 
         List<ResourceEntry> resources = new ArrayList<>();
 
@@ -75,11 +73,12 @@ public class ResourceBundleGenerator {
         scanner.setCaseSensitive(false);
         scanner.scan();
 
-        for (String fileName : scanner.getIncludedFiles()) {
-            File file = new File(scanner.getBasedir(), fileName);
+        for (String filePath : scanner.getIncludedFiles()) {
+            File file = new File(scanner.getBasedir(), filePath);
             String resourceId = file.getName();
             resourceId = resourceId.substring(0, resourceId.length() - 4);
-            resources.add(new ResourceEntry(resourceId, "/" + fileName.replace("\\", "/")));
+            String fileResourcePath = "/" + filePath.replace("\\", "/");
+            resources.add(new ResourceEntry(resourceId, fileResourcePath));
         }
 
         if (resources.isEmpty()) {
@@ -89,21 +88,24 @@ public class ResourceBundleGenerator {
         Collections.sort(resources);
 
         JCodeModel cm = new JCodeModel();
-        JDefinedClass definedClass = cm._package(packageName)._class(JMod.PUBLIC, interfaceSimpleName, EClassType.ENUM);
+        JDefinedClass definedClass = cm._package(packageName)._class(JMod.PUBLIC, typeSimpleName, EClassType.ENUM);
 
-        JFieldVar field1 = definedClass.field(JMod.PRIVATE | JMod.FINAL, String.class, "absoluteResourcePath");
+        JFieldVar absResPathField = definedClass.field(JMod.PRIVATE | JMod.FINAL, String.class, "absoluteResourcePath");
 
         JMethod constructor = definedClass.constructor(JMod.PRIVATE);
         JVar param1 = constructor.param(String.class, "absoluteResourcePath");
 
         JBlock body = constructor.body();
-        body.assign(JExpr._this().ref(field1), param1);
+        body.assign(JExpr._this().ref(absResPathField), param1);
 
         JMethod asUrlMethod = definedClass.method(JMod.PUBLIC, URL.class, "asUrl");
-        asUrlMethod.body()._return(definedClass.dotclass().invoke("getResource").arg(field1));
+        asUrlMethod.body()._return(definedClass.dotclass().invoke("getResource").arg(absResPathField));
 
         JMethod asStreamMethod = definedClass.method(JMod.PUBLIC, InputStream.class, "asStream");
-        asStreamMethod.body()._return(definedClass.dotclass().invoke("getResourceAsStream").arg(field1));
+        asStreamMethod.body()._return(definedClass.dotclass().invoke("getResourceAsStream").arg(absResPathField));
+
+        JMethod getAbsolutePathMethod = definedClass.method(JMod.PUBLIC, String.class, "getAbsolutePath");
+        getAbsolutePathMethod.body()._return(absResPathField);
 
         for (ResourceEntry resourceEntry : resources) {
             JEnumConstant enumConst = definedClass.enumConstant(resourceEntry.getResourceId());

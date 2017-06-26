@@ -137,7 +137,7 @@
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <excludes>**/generator/*.class</excludes>
+                    <excludes>**/generator/</excludes>
                 </configuration>
             </plugin>
             <plugin>

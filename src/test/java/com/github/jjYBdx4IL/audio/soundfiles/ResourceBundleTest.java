@@ -26,12 +26,21 @@ import java.io.InputStream;
 public class ResourceBundleTest {
 
     @Test
+    public void testCount() throws IOException {
+        int counter = 0;
+        for (ResourceBundle item : ResourceBundle.values()) {
+            counter++;
+        }
+        assertTrue(counter > 5);
+    }
+
+    @Test
     public void testAsUrl() throws IOException {
         for (ResourceBundle item : ResourceBundle.values()) {
             assertNotNull(item.asUrl());
         }
     }
-    
+
     @Test
     public void testAsStream() throws IOException {
         for (ResourceBundle item : ResourceBundle.values()) {
