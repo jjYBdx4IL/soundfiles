@@ -37,3 +37,6 @@ having to manually determine the asset paths.
 
 The compilation and running of the resource bundle generator within the same maven module is a bit messy and should
 be avoided, ie. it should be moved to its own module at some point.
+
+--
+devel/java/github/soundfiles@7840
