@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -145,13 +146,6 @@
                 <configuration>
                     <excludeResources>true</excludeResources>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
             </plugin>
         </plugins>
 
@@ -352,6 +346,13 @@
             <build>
                 <plugins>
                     <plugin>
+                        <artifactId>maven-release-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <version>1.8</version>
                         <executions>
@@ -365,12 +366,15 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <dirname property="directoryProperty"
+                                        <dirname
+                                            property="directoryProperty"
                                             file="${project.basedir}/${git.log.dumpfile}" />
-                                        <mkdir dir="${directoryProperty}" />
+                                        <mkdir
+                                            dir="${directoryProperty}" />
                                         <exec executable="bash"
                                             dir="${project.basedir}"
-                                            spawn="false" failonerror="true">
+                                            spawn="false"
+                                            failonerror="true">
                                             <arg value="-c" />
                                             <arg
                                                 value="git log --name-only src/main/resources > ${git.log.dumpfile}" />

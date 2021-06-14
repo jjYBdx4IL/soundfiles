@@ -39,4 +39,4 @@ The compilation and running of the resource bundle generator within the same mav
 be avoided, ie. it should be moved to its own module at some point.
 
 --
-devel/java/github/soundfiles@7844
+devel/java/github/soundfiles@7884
